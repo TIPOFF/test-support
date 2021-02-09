@@ -4,41 +4,14 @@
 ![Tests](https://github.com/tipoff/test-support/workflows/Tests/badge.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/tipoff/test-support.svg?style=flat-square)](https://packagist.org/packages/tipoff/test-support)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Contains common support for unit and feature tests across all Tipoff packages.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require tipoff/test-support
-```
-
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --provider="Tipoff\TestSupport\TestSupportServiceProvider" --tag="test-support-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --provider="Tipoff\TestSupport\TestSupportServiceProvider" --tag="test-support-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-## Usage
-
-```php
-$test-support = new Tipoff\TestSupport();
-echo $test-support->echoPhrase('Hello, Tipoff!');
+composer require tipoff/test-support --dev
 ```
 
 ## Testing
