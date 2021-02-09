@@ -3,39 +3,20 @@
 namespace Tipoff\TestSupport\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Laravel\Nova\NovaCoreServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Tipoff\Support\SupportServiceProvider;
+use Tipoff\TestSupport\BaseTestCase;
 use Tipoff\TestSupport\TestSupportServiceProvider;
 
-class TestCase extends Orchestra
+class TestCase extends BaseTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Tipoff\\TestSupport\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-    }
-
     protected function getPackageProviders($app)
     {
         return [
-            TestSupportServiceProvider::class,
+            NovaCoreServiceProvider::class,
+            NovaPackageServiceProvider::class,
+            SupportServiceProvider::class,
         ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('database.default', 'sqlite');
-        $app['config']->set('database.connections.sqlite', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-
-        /*
-        include_once __DIR__.'/../database/migrations/create_test_support_table.php.stub';
-        (new \CreatePackageTable())->up();
-        */
     }
 }
