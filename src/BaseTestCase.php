@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tipoff\TestSupport;
 
 use Orchestra\Testbench\TestCase as Orchestra;
+use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
 {
@@ -80,5 +82,33 @@ abstract class BaseTestCase extends Orchestra
         }
 
         return $this;
+    }
+
+    static protected function createPermissionedUser(string $permission, bool $hasPermission): UserInterface
+    {
+        /**
+         * Normally, this would be done with a makePartial() mock, but the mock gets lost
+         * and the real user class is used when the permission method is invoked.  So, we
+         * establish expectations in directly in an authenticatable class instance.
+         */
+        $user = new class extends User {
+            private string $permission;
+            private bool $hasPermission;
+
+            public function hasPermissionTo($permission, $guardName = null): bool
+            {
+                return $this->permission === $permission ? $this->hasPermission : false;
+            }
+
+            public function setHasPermission(string $permission, bool $hasPermission): self
+            {
+                $this->permission = $permission;
+                $this->hasPermission = $hasPermission;
+
+                return $this;
+            }
+        };
+
+        return $user->setHasPermission($permission, $hasPermission);
     }
 }
