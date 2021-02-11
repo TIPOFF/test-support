@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tipoff\TestSupport;
 
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\Permission\Contracts\Permission;
 use Tipoff\Support\Contracts\Models\UserInterface;
 use Tipoff\TestSupport\Models\User;
 
@@ -22,6 +23,14 @@ abstract class BaseTestCase extends Orchestra
     public function setUp(): void
     {
         parent::setUp();
+
+        /**
+         * TODO - this should be removed one permission migrations are included in tipoff/auth and auth becomes support dependency
+         */
+        if ($this->app->has(Permission::class)) {
+            include_once __DIR__ . '/../../../vendor/spatie/laravel-permission/database/migrations/create_permission_tables.php.stub';
+            (new \CreatePermissionTables())->up();
+        }
 
         $this->artisan('migrate', ['--database' => 'testing'])->run();
 
