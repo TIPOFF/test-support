@@ -52,7 +52,7 @@ abstract class BaseTestCase extends Orchestra
     protected function createStubTables(): self
     {
         // Create stub tables for stub models to satisfy possible FK dependencies
-        foreach (config('tipoff.model_class') as $class) {
+        foreach (config('tipoff.model_class') ?? [] as $class) {
             if (method_exists($class, 'createTable')) {
                 /** @psalm-suppress UndefinedClass */
                 $class::createTable();
@@ -65,7 +65,7 @@ abstract class BaseTestCase extends Orchestra
     protected function createStubModels(): self
     {
         // Create stub models for anything not already defined
-        foreach (config('tipoff.model_class') as $modelClass) {
+        foreach (config('tipoff.model_class') ?? [] as $modelClass) {
             createModelStub($modelClass);
         }
 
@@ -75,7 +75,7 @@ abstract class BaseTestCase extends Orchestra
     protected function createStubNovaResources(): self
     {
         // Create nova resource stubs for anything not already defined
-        foreach (config('tipoff.nova_class') as $alias => $novaClass) {
+        foreach (config('tipoff.nova_class') ?? [] as $alias => $novaClass) {
             if ($modelClass = config('tipoff.model_class.'.$alias)) {
                 createNovaResourceStub($novaClass, $modelClass);
             }
