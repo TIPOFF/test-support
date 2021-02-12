@@ -14,3 +14,7 @@ All notable changes to `test-support` will be documented in this file.
 
 - require tipoff/authorization dependency
 - remove need for support service provider
+
+## 1.0.3 - 2021-02-12
+
+- update test user
