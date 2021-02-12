@@ -4,8 +4,16 @@ declare(strict_types=1);
 
 namespace Tipoff\TestSupport\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\Notifiable;
 use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\Support\Models\BaseModel;
 use Tipoff\Support\Models\TestModelStub;
 
 /**
@@ -13,11 +21,14 @@ use Tipoff\Support\Models\TestModelStub;
  * to extend the authenticatble user and implement a few permission
  * related methods.
  */
-class User extends Authenticatable implements UserInterface
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, UserInterface
 {
+    use Authenticatable;
+    use Authorizable;
+    use CanResetPassword;
+    use MustVerifyEmail;
     use TestModelStub;
-
-    protected $guarded = ['id'];
+    use Notifiable;
 
     public function hasRole($roles, string $guard = null): bool
     {
