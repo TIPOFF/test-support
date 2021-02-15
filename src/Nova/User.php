@@ -6,9 +6,9 @@ namespace Tipoff\TestSupport\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Tipoff\Support\Nova\Resource;
+use Tipoff\Support\Nova\BaseResource;
 
-class User extends Resource
+class User extends BaseResource
 {
     public static $model = \Tipoff\TestSupport\Models\User::class;
 
