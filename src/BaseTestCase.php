@@ -70,8 +70,7 @@ abstract class BaseTestCase extends Orchestra
         DB::listen(function($query) {
             Log::info(
                 $query->sql,
-                $query->bindings,
-                $query->time
+                $query->bindings
             );
         });
 
