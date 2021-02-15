@@ -24,7 +24,12 @@ abstract class BaseNovaPackageServiceProvider extends NovaApplicationServiceProv
 
     protected function resources()
     {
-        Nova::resources(array_merge(config('tipoff.nova_class'), self::$packageResources));
+        Nova::resources(array_filter(
+            array_merge(config('tipoff.nova_class'), self::$packageResources),
+            function (string $class) {
+                return class_exists($class);
+            })
+        );
     }
 
     protected function routes()

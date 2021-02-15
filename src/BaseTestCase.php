@@ -4,12 +4,20 @@ declare(strict_types=1);
 
 namespace Tipoff\TestSupport;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
 {
+    protected bool $stubModels = true;
+
+    protected bool $stubTables = true;
+
+    protected bool $stubNovaResources = true;
+
     /**
      * When testing Nova, create a custom override of BaseNovaPackageServiceProvider
      * that defines the Nova resources in the package and then make that custom provider
@@ -25,17 +33,24 @@ abstract class BaseTestCase extends Orchestra
 
         $this->artisan('migrate', ['--database' => 'testing'])->run();
 
-        $this->createStubTables();
+        if ($this->stubTables) {
+            $this->createStubTables();
+        }
     }
 
     public function getEnvironmentSetUp($app)
     {
-        // Use a custom stub for the User model so it satisfies authentication
-        $app['config']->set('tipoff.model_class.user', \Tipoff\TestSupport\Models\User::class);
-
         // Stub all models and nova resources not declared in the package or its dependencies
-        $this->createStubModels()
-            ->createStubNovaResources();
+        if ($this->stubModels) {
+            // Use a custom stub for the User model so it satisfies authentication
+            $app['config']->set('tipoff.model_class.user', \Tipoff\TestSupport\Models\User::class);
+            $this->createStubModels();
+        }
+
+        if ($this->stubNovaResources) {
+            $app['config']->set('tipoff.nova_class.user', \Tipoff\TestSupport\Nova\User::class);
+            $this->createStubNovaResources();
+        }
     }
 
     /**
@@ -45,6 +60,18 @@ abstract class BaseTestCase extends Orchestra
     protected function logToStderr($app): self
     {
         $app['config']->set('logging.default', 'stderr');
+
+        return $this;
+    }
+
+    protected function logSql(): self
+    {
+        DB::listen(function($query) {
+            Log::info(
+                $query->sql,
+                $query->bindings
+            );
+        });
 
         return $this;
     }
