@@ -18,3 +18,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.0.3 - 2021-02-12
 
 - update test user
+
+## 1.0.4 - 2021-02-15
+
+- improve support for testing nova
