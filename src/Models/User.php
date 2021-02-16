@@ -12,7 +12,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
-use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\Support\Contracts\Authorization\UserInterface;
 use Tipoff\Support\Models\BaseModel;
 use Tipoff\Support\Models\TestModelStub;
 
@@ -21,7 +21,7 @@ use Tipoff\Support\Models\TestModelStub;
  * to extend the authenticatble user and implement a few permission
  * related methods.
  */
-class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, UserInterface
+class User extends BaseModel implements UserInterface, CanResetPasswordContract
 {
     use Authenticatable;
     use Authorizable;

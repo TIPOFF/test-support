@@ -7,7 +7,7 @@ namespace Tipoff\TestSupport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\Support\Contracts\Authorization\UserInterface;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
