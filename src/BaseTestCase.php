@@ -57,8 +57,9 @@ abstract class BaseTestCase extends Orchestra
      * Useful to temporarily making logging output very visible during test execution for test
      * debugging purposes.
      */
-    protected function logToStderr($app): self
+    protected function logToStderr($app = null): self
     {
+        $app = $app ?: $this->app;
         $app['config']->set('logging.default', 'stderr');
 
         return $this;
