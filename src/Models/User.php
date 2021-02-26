@@ -30,13 +30,23 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     use TestModelStub;
     use Notifiable;
 
+    public $hasRole = true;
+    public $hasPermissionTo = true;
+
     public function hasRole($roles, string $guard = null): bool
     {
-        return true;
+        return $this->hasRole;
     }
 
     public function hasPermissionTo($permission, $guardName = null): bool
     {
-        return true;
+        return $this->hasPermissionTo;
+    }
+
+    public function removePermissions(): self
+    {
+        $this->hasRole = $this->hasPermissionTo = false;
+
+        return $this;
     }
 }
