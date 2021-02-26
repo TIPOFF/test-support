@@ -6,8 +6,9 @@ namespace Tipoff\TestSupport;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Orchestra\Testbench\BrowserKit\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\TestSupport\Http\Kernel;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
@@ -31,11 +32,16 @@ abstract class BaseTestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->artisan('migrate', ['--database' => 'testing'])->run();
+        $this->artisan('migrate', ['--database' => 'testing']);
 
         if ($this->stubTables) {
             $this->createStubTables();
         }
+    }
+
+    protected function resolveApplicationHttpKernel($app)
+    {
+        $app->singleton('Illuminate\Contracts\Http\Kernel', Kernel::class);
     }
 
     public function getEnvironmentSetUp($app)
