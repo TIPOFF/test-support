@@ -26,3 +26,8 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.0.5 - 2021-02-15
 
 - update nova resource for test user
+
+## 1.0.6 - 2021-02-26
+
+- sellable test
+- sellable booking test
