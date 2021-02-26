@@ -6,9 +6,8 @@ namespace Tipoff\TestSupport;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Orchestra\Testbench\BrowserKit\TestCase as Orchestra;
+use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
-use Tipoff\TestSupport\Http\Kernel;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
@@ -32,16 +31,11 @@ abstract class BaseTestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->artisan('migrate', ['--database' => 'testing']);
+        $this->artisan('migrate', ['--database' => 'testing'])->run();
 
         if ($this->stubTables) {
             $this->createStubTables();
         }
-    }
-
-    protected function resolveApplicationHttpKernel($app)
-    {
-        $app->singleton('Illuminate\Contracts\Http\Kernel', Kernel::class);
     }
 
     public function getEnvironmentSetUp($app)
@@ -63,8 +57,9 @@ abstract class BaseTestCase extends Orchestra
      * Useful to temporarily making logging output very visible during test execution for test
      * debugging purposes.
      */
-    protected function logToStderr($app): self
+    protected function logToStderr($app = null): self
     {
+        $app = $app ?: $this->app;
         $app['config']->set('logging.default', 'stderr');
 
         return $this;
