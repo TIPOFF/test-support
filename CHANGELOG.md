@@ -39,3 +39,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.0.8 - 2021-02-27
 
 - bump dependencies
+
+## 1.0.9 - 2021-02-27
+
+- authorization user model
