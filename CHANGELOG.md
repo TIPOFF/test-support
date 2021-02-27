@@ -31,3 +31,7 @@ All notable changes to `test-support` will be documented in this file.
 
 - sellable test
 - sellable booking test
+
+## 1.0.7 - 2021-02-26
+
+- api permissions update for test user model
