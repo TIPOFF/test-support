@@ -42,13 +42,17 @@ abstract class BaseTestCase extends Orchestra
     {
         // Stub all models and nova resources not declared in the package or its dependencies
         if ($this->stubModels) {
-            // Use a custom stub for the User model so it satisfies authentication
-            $app['config']->set('tipoff.model_class.user', \Tipoff\TestSupport\Models\User::class);
+            if (!class_exists($app['config']->get('tipoff.model_class.user'))) {
+                // Use a custom stub for the User model so it satisfies authentication
+                $app['config']->set('tipoff.model_class.user', \Tipoff\TestSupport\Models\User::class);
+            }
             $this->createStubModels();
         }
 
         if ($this->stubNovaResources) {
-            $app['config']->set('tipoff.nova_class.user', \Tipoff\TestSupport\Nova\User::class);
+            if (!class_exists($app['config']->get('tipoff.nova_class.user'))) {
+                $app['config']->set('tipoff.nova_class.user', \Tipoff\TestSupport\Nova\User::class);
+            }
             $this->createStubNovaResources();
         }
     }
