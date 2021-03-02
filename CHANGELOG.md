@@ -47,3 +47,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.1.0 - 2021-03-01
 
 - nova authorized user
+
+## 1.1.1 - 2021-03-01
+
+- remove authorization package
