@@ -57,6 +57,21 @@ abstract class BaseTestCase extends Orchestra
         }
     }
 
+    public function withViews(string $path, $app = null): self
+    {
+        if (!is_dir($path)) {
+            throw new \Exception('Invalid view path: '.$path);
+        }
+
+        $app = $app ?: $this->app;
+        $paths = array_merge($app['config']->get('view.paths'), [
+            $path,
+        ]);
+        $app['config']->set('view.paths', $paths);
+
+        return $this;
+    }
+
     /**
      * Useful to temporarily making logging output very visible during test execution for test
      * debugging purposes.
