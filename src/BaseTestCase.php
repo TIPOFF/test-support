@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\Support\TipoffPackage;
+use Tipoff\Support\TipoffServiceProvider;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
@@ -68,6 +70,36 @@ abstract class BaseTestCase extends Orchestra
             $path,
         ]);
         $app['config']->set('view.paths', $paths);
+
+        return $this;
+    }
+
+    public function createApplication()
+    {
+        $app = parent::createApplication();
+
+        $this->loadViewsFromTipoffPackages($app);
+
+        return $app;
+    }
+
+    protected function loadViewsFromTipoffPackages($app): self
+    {
+        // Examine only the Tipoff Service providers
+        foreach ($app->getProviders(TipoffServiceProvider::class) as $provider) {
+            // Get the configured package from the provider
+            $property = (new \ReflectionClass($provider))->getProperty('package');
+            $property->setAccessible(true);
+
+            /** @var TipoffPackage $package */
+            $package = $property->getValue($provider);
+            if ($package->hasViews()) {
+                $views = $package->basePath('../resources/views');
+                if (is_dir($views)) {
+                    $this->withViews($views, $app);
+                }
+            }
+        }
 
         return $this;
     }
