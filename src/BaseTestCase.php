@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Tipoff\TestSupport;
 
+use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View as ViewFacade;
+use Illuminate\Support\Str;
+use Illuminate\Testing\TestView;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
 use Tipoff\Support\TipoffPackage;
@@ -14,6 +18,8 @@ use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
 {
+    use InteractsWithViews;
+
     protected bool $stubModels = true;
 
     protected bool $stubTables = true;
@@ -103,6 +109,25 @@ abstract class BaseTestCase extends Orchestra
 
         return $this;
     }
+
+    protected function blade(string $template, array $data = [])
+    {
+        $tempDirectory = sys_get_temp_dir();
+
+        if (! in_array($tempDirectory, ViewFacade::getFinder()->getPaths())) {
+            ViewFacade::addLocation(sys_get_temp_dir());
+        }
+
+        $tempFile = tempnam($tempDirectory, 'laravel-blade').'.blade.php';
+
+        // Fix for Github Actions ci/cd on windows - this strips any .tmp from the tempfile name generated
+        $tempFile = preg_replace('/\.tmp\.blade/', '.blade', $tempFile);
+
+        file_put_contents($tempFile, $template);
+
+        return new TestView(view(Str::before(basename($tempFile), '.blade.php'), $data));
+    }
+
 
     /**
      * Useful to temporarily making logging output very visible during test execution for test
