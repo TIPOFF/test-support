@@ -4,14 +4,22 @@ declare(strict_types=1);
 
 namespace Tipoff\TestSupport;
 
+use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View as ViewFacade;
+use Illuminate\Support\Str;
+use Illuminate\Testing\TestView;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
+use Tipoff\Support\TipoffPackage;
+use Tipoff\Support\TipoffServiceProvider;
 use Tipoff\TestSupport\Models\User;
 
 abstract class BaseTestCase extends Orchestra
 {
+    use InteractsWithViews;
+
     protected bool $stubModels = true;
 
     protected bool $stubTables = true;
@@ -56,6 +64,70 @@ abstract class BaseTestCase extends Orchestra
             $this->createStubNovaResources();
         }
     }
+
+    public function withViews(string $path, $app = null): self
+    {
+        if (!is_dir($path)) {
+            throw new \Exception('Invalid view path: '.$path);
+        }
+
+        $app = $app ?: $this->app;
+        $paths = array_merge($app['config']->get('view.paths'), [
+            $path,
+        ]);
+        $app['config']->set('view.paths', $paths);
+
+        return $this;
+    }
+
+    public function createApplication()
+    {
+        $app = parent::createApplication();
+
+        $this->loadViewsFromTipoffPackages($app);
+
+        return $app;
+    }
+
+    protected function loadViewsFromTipoffPackages($app): self
+    {
+        // Examine only the Tipoff Service providers
+        foreach ($app->getProviders(TipoffServiceProvider::class) as $provider) {
+            // Get the configured package from the provider
+            $property = (new \ReflectionClass($provider))->getProperty('package');
+            $property->setAccessible(true);
+
+            /** @var TipoffPackage $package */
+            $package = $property->getValue($provider);
+            if ($package->hasViews()) {
+                $views = $package->basePath('../resources/views');
+                if (is_dir($views)) {
+                    $this->withViews($views, $app);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    protected function blade(string $template, array $data = [])
+    {
+        $tempDirectory = sys_get_temp_dir();
+
+        if (! in_array($tempDirectory, ViewFacade::getFinder()->getPaths())) {
+            ViewFacade::addLocation(sys_get_temp_dir());
+        }
+
+        $tempFile = tempnam($tempDirectory, 'laravel-blade').'.blade.php';
+
+        // Fix for Github Actions ci/cd on windows - this strips any .tmp from the tempfile name generated
+        $tempFile = preg_replace('/\.tmp\.blade/', '.blade', $tempFile);
+
+        file_put_contents($tempFile, $template);
+
+        return new TestView(view(Str::before(basename($tempFile), '.blade.php'), $data));
+    }
+
 
     /**
      * Useful to temporarily making logging output very visible during test execution for test
