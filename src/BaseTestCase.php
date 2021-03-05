@@ -24,7 +24,7 @@ abstract class BaseTestCase extends Orchestra
 
     protected bool $stubTables = true;
 
-    protected bool $stubNovaResources = true;
+    protected bool $stubNovaResources = false;
 
     /**
      * When testing Nova, create a custom override of BaseNovaPackageServiceProvider
@@ -58,9 +58,6 @@ abstract class BaseTestCase extends Orchestra
         }
 
         if ($this->stubNovaResources) {
-            if (!class_exists($app['config']->get('tipoff.nova_class.user'))) {
-                $app['config']->set('tipoff.nova_class.user', \Tipoff\TestSupport\Nova\User::class);
-            }
             $this->createStubNovaResources();
         }
     }
