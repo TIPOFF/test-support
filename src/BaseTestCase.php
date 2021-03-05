@@ -39,6 +39,7 @@ abstract class BaseTestCase extends Orchestra
     {
         parent::setUp();
 
+        $this->artisan('view:clear')->run();
         $this->artisan('migrate', ['--database' => 'testing'])->run();
 
         if ($this->stubTables) {
