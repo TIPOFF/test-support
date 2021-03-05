@@ -13,6 +13,7 @@ abstract class BaseNovaPackageServiceProvider extends NovaApplicationServiceProv
     /**
      * To test Nova resources within a package, override this base Provider and update
      * the packageResources array with the Nova resource classes provided by the package.
+     * NOTE: Resources registered via package provider definitions arent required here.
      *
      * Ensure both of
      *   NovaCoreServiceProvider::class,
