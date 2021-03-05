@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View as ViewFacade;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestView;
+use Illuminate\View\DynamicComponent;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Tipoff\Support\Contracts\Models\UserInterface;
 use Tipoff\Support\TipoffPackage;
@@ -147,6 +148,26 @@ abstract class BaseTestCase extends Orchestra
                 $query->bindings
             );
         });
+
+        return $this;
+    }
+
+    /**
+     * Laravel's DynamicComponent uses statics to maintain state for quicker response. But,
+     * statics create issues for tests - they can cause the test to behave differently based
+     * on what took place in some prior test.  This clears the static's in the DynamicComponent
+     * to make testing with it predictable.
+     */
+    protected function resetDynamicComponent(): self
+    {
+        $reflectionClass = new \ReflectionClass(DynamicComponent::class);
+
+        $prop = $reflectionClass->getProperty('componentClasses');
+        $prop->setAccessible(true);
+        $prop->setValue([]);
+        $prop = $reflectionClass->getProperty('compiler');
+        $prop->setAccessible(true);
+        $prop->setValue(null);
 
         return $this;
     }
