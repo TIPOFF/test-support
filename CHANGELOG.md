@@ -56,3 +56,7 @@ All notable changes to `test-support` will be documented in this file.
 
 - test package loaded views
 - test blade components
+
+## 1.2.0 - 2021-03-05
+
+- non-abstract nova package service provider
