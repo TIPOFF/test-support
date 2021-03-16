@@ -59,6 +59,8 @@ abstract class BaseTestCase extends Orchestra
             $this->createStubModels();
         }
 
+        $app['config']->set('auth.providers.users.model', $app['config']->get('tipoff.model_class.user'));
+
         if ($this->stubNovaResources) {
             $this->createStubNovaResources();
         }
