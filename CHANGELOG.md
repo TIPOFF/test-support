@@ -60,3 +60,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.2.0 - 2021-03-05
 
 - non-abstract nova package service provider
+
+## 1.3.0 - 2021-03-16
+
+- facilitate role assignment in tests
