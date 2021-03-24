@@ -64,3 +64,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.3.0 - 2021-03-16
 
 - facilitate role assignment in tests
+
+## 1.4.0 - 2021-03-24
+
+- use tipoff user provider when class defined
