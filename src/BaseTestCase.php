@@ -60,6 +60,9 @@ abstract class BaseTestCase extends Orchestra
         }
 
         $app['config']->set('auth.providers.users.model', $app['config']->get('tipoff.model_class.user'));
+        if (class_exists(\Tipoff\Authorization\Providers\TipoffUserProvider::class)) {
+            $app['config']->set('auth.providers.users.driver', 'tipoff');
+        }
 
         if ($this->stubNovaResources) {
             $this->createStubNovaResources();
