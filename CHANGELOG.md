@@ -68,3 +68,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.4.0 - 2021-03-24
 
 - use tipoff user provider when class defined
+
+## 1.4.1 - 2021-03-26
+
+- email guard in auth config
