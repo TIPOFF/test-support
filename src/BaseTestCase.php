@@ -48,6 +48,18 @@ abstract class BaseTestCase extends Orchestra
         }
     }
 
+    protected function apiUrl(string $uri): string
+    {
+        $prefix = rtrim(config('tipoff.api.uri_prefix'), '/');
+        return ltrim("{$prefix}/{$uri}", '/');
+    }
+
+    protected function webUrl(string $uri): string
+    {
+        $prefix = rtrim(config('tipoff.web.uri_prefix'), '/');
+        return ltrim("{$prefix}/{$uri}", '/');
+    }
+
     public function getEnvironmentSetUp($app)
     {
         // Stub all models and nova resources not declared in the package or its dependencies
