@@ -64,6 +64,16 @@ abstract class BaseTestCase extends Orchestra
             $app['config']->set('auth.providers.users.driver', 'tipoff');
         }
 
+        $app['config']->set('auth.guards.email', [
+            'driver' => 'session',
+            'provider' => 'email',
+        ]);
+
+        $app['config']->set('auth.providers.email', [
+            'driver' => 'eloquent',
+            'model' => $app['config']->get('tipoff.model_class.email_address'),
+        ]);
+
         if ($this->stubNovaResources) {
             $this->createStubNovaResources();
         }
