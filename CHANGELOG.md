@@ -72,3 +72,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.4.1 - 2021-03-26
 
 - email guard in auth config
+
+## 1.4.2 - 2021-03-26
+
+- helpers to construct web/api urls with proper prefix
