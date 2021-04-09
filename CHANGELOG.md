@@ -76,3 +76,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 1.4.2 - 2021-03-26
 
 - helpers to construct web/api urls with proper prefix
+
+## 2.0.0 - 2021-04-09
+
+- test support for routing & views
