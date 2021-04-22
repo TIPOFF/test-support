@@ -80,3 +80,7 @@ All notable changes to `test-support` will be documented in this file.
 ## 2.0.0 - 2021-04-09
 
 - test support for routing & views
+
+## 2.0.1 - 2021-04-22
+
+- implement laravel fix for windows blade testing
