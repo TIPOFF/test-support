@@ -6,6 +6,12 @@
 
 Contains common support for unit and feature tests across all Tipoff packages.
 
+## Deprecated / Archived
+
+This is a pain to keep updated so I am removing it as a dependency from other packages & so they can stand better in isolation & be updated faster to new versions of Laravel.
+
+This is where the description should go of what all needs to be removed in the other packages that contain this dependency.
+
 ## Installation
 
 You can install the package via composer:
